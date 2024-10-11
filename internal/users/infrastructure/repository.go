@@ -24,6 +24,8 @@ func New(db *mongo.Database) domain.UserRepository {
 }
 
 func (repo *userRepository) Create(ctx context.Context, user *domain.User) (*string, error) {
+	user.Id = primitive.NewObjectID()
+
 	result, err := repo.db.Collection(collectionName).InsertOne(ctx, user)
 	if err != nil {
 		return nil, err

@@ -1,6 +1,7 @@
 package http
 
 import (
+	users "github.com/erotokritosVall/xmapp/internal/users/application"
 	"github.com/erotokritosVall/xmapp/pkg/mongo"
 	"github.com/erotokritosVall/xmapp/pkg/redis"
 	"github.com/kelseyhightower/envconfig"
@@ -14,6 +15,7 @@ type configuration struct {
 	AllowedOrigins []string `envconfig:"ALLOWED_ORIGINS"`
 	RedisConfig    *redis.Configuration
 	MongoConfig    *mongo.Configuration
+	JwtConfig      *users.JwtConfig
 }
 
 func (s *server) readConfiguration() {

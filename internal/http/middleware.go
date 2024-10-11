@@ -22,6 +22,8 @@ const (
 )
 
 func (server *server) enableMiddleware() {
+	httplog.DefaultOptions.Concise = true
+
 	server.router.Use(middleware.Timeout(api.Timeout))
 	server.router.Use(middleware.StripSlashes)
 	server.router.Use(middleware.GetHead)
@@ -41,7 +43,7 @@ func (server *server) enableMiddleware() {
 func (server *server) authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get(authHeaderKey)
-		token := strings.TrimPrefix(bearerPrefix, authHeader)
+		token := strings.TrimPrefix(authHeader, bearerPrefix)
 
 		if util.IsEmptyOrWhitespace(token) {
 			api.Response(http.StatusUnauthorized).Send(w, r)
@@ -61,8 +63,13 @@ func (server *server) authMiddleware(next http.Handler) http.Handler {
 		}
 
 		parsedToken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-			return "token", nil
+			return server.config.JwtConfig.Secret, nil
 		})
+		if err != nil {
+			log.Err(err).Msg("failed to parse token")
+			api.Response(http.StatusUnauthorized).Send(w, r)
+			return
+		}
 
 		if !parsedToken.Valid {
 			api.Response(http.StatusUnauthorized).Send(w, r)

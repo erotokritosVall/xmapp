@@ -9,8 +9,6 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/api
 
-EXPOSE 8080
-
 FROM debian:12-slim
 
 WORKDIR /app
@@ -22,5 +20,7 @@ RUN apt-get -y update && \
 
 COPY --from=build /app/server /app/server
 COPY cmd/api/.env /app
+
+EXPOSE 8080
 
 ENTRYPOINT ["/app/server"]

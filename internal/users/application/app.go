@@ -17,19 +17,21 @@ type userApp struct {
 	validator *validator.Validate
 }
 
-func NewApp(srv domain.UserService) api.App {
+func NewApp(srv domain.UserService, validator *validator.Validate) api.App {
 	return &userApp{
-		srv: srv,
+		srv:       srv,
+		validator: validator,
 	}
 }
 
 func (app *userApp) RegisterProtectedEndpoints(router chi.Router) {
 	router.Post("/v1/logout", app.logout)
-	router.Post("/v1/users", app.createUser)
+
 }
 
 func (app *userApp) RegisterPublicEndpoints(router chi.Router) {
 	router.Post("/v1/login", app.login)
+	router.Post("/v1/users", app.createUser)
 }
 
 func (app *userApp) login(writer http.ResponseWriter, request *http.Request) {

@@ -16,16 +16,23 @@ const (
 	tokenTtl = 30 * time.Minute
 )
 
+type JwtConfig struct {
+	Secret []byte `envconfig:"JWT_SECRET"`
+}
+
 type userService struct {
-	repo  domain.UserRepository
-	redis redis.Redis
+	repo      domain.UserRepository
+	redis     redis.Redis
+	jwtConfig *JwtConfig
 }
 
 func NewService(repo domain.UserRepository,
-	redis redis.Redis) domain.UserService {
+	redis redis.Redis,
+	jwtConfig *JwtConfig) domain.UserService {
 	return &userService{
-		repo:  repo,
-		redis: redis,
+		repo:      repo,
+		redis:     redis,
+		jwtConfig: jwtConfig,
 	}
 }
 
@@ -52,10 +59,10 @@ func (srv *userService) Login(ctx context.Context, email, password string) (*str
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss": "api",
 		"u":   user.Id.Hex(),
-		"exp": time.Now().UTC().Add(tokenTtl),
+		"exp": time.Now().UTC().Add(tokenTtl).Unix(),
 	})
 
-	token, err := t.SignedString("token")
+	token, err := t.SignedString(srv.jwtConfig.Secret)
 	return &token, err
 }
 

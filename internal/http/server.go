@@ -12,16 +12,18 @@ import (
 	mg "github.com/erotokritosVall/xmapp/pkg/mongo"
 	"github.com/erotokritosVall/xmapp/pkg/redis"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type server struct {
-	apps   []api.App
-	redis  redis.Redis
-	db     *mongo.Database
-	router chi.Router
-	config *configuration
+	apps      []api.App
+	redis     redis.Redis
+	db        *mongo.Database
+	router    chi.Router
+	config    *configuration
+	validator *validator.Validate
 }
 
 func New() *server {
@@ -32,6 +34,7 @@ func New() *server {
 	s.startupMongo()
 	s.enableRouting()
 	s.enableMiddleware()
+	s.initializeValidator()
 	s.initializeApps()
 	s.registerEndpoints()
 
@@ -40,7 +43,7 @@ func New() *server {
 
 func (s *server) Start(exitChannel chan os.Signal) {
 	go func() {
-		addr := fmt.Sprintf("%s:%s", s.config.AppHost, s.config.AppPort)
+		addr := fmt.Sprintf(":%s", s.config.AppPort)
 		if err := http.ListenAndServe(addr, s.router); err != nil {
 			if err != http.ErrServerClosed {
 				panic(err)
@@ -51,6 +54,8 @@ func (s *server) Start(exitChannel chan os.Signal) {
 	log.Debug().Msg("server started")
 
 	<-exitChannel
+
+	log.Debug().Msg("server stopping")
 }
 
 func (s *server) startupRedis() {
@@ -75,12 +80,16 @@ func (s *server) enableRouting() {
 	s.router = chi.NewRouter()
 }
 
+func (s *server) initializeValidator() {
+	s.validator = validator.New()
+}
+
 func (s *server) initializeApps() {
 	s.apps = []api.App{}
 
 	userRepo := usersInfra.New(s.db)
-	userSrv := usersApp.NewService(userRepo, s.redis)
-	s.apps = append(s.apps, usersApp.NewApp(userSrv))
+	userSrv := usersApp.NewService(userRepo, s.redis, s.config.JwtConfig)
+	s.apps = append(s.apps, usersApp.NewApp(userSrv, s.validator))
 }
 
 func (s *server) registerEndpoints() {
