@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	companiesApp "github.com/erotokritosVall/xmapp/internal/companies/application"
+	companiesInfra "github.com/erotokritosVall/xmapp/internal/companies/infrastructure"
 	usersApp "github.com/erotokritosVall/xmapp/internal/users/application"
 	usersInfra "github.com/erotokritosVall/xmapp/internal/users/infrastructure"
 	"github.com/erotokritosVall/xmapp/pkg/api"
@@ -90,6 +92,10 @@ func (s *server) initializeApps() {
 	userRepo := usersInfra.New(s.db)
 	userSrv := usersApp.NewService(userRepo, s.redis, s.config.JwtConfig)
 	s.apps = append(s.apps, usersApp.NewApp(userSrv, s.validator))
+
+	companiesRepo := companiesInfra.New(s.db)
+	companiesSrv := companiesApp.NewService(companiesRepo)
+	s.apps = append(s.apps, companiesApp.NewApp(companiesSrv, s.validator))
 }
 
 func (s *server) registerEndpoints() {

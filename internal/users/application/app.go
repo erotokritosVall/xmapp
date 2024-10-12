@@ -37,7 +37,7 @@ func (app *userApp) RegisterPublicEndpoints(router chi.Router) {
 func (app *userApp) login(writer http.ResponseWriter, request *http.Request) {
 	req := &loginRequest{}
 	if err := json.NewDecoder(request.Body).Decode(req); err != nil {
-		log.Warn().Msgf("failed to decode loginRequest: %+v", err)
+		log.Warn().Err(err).Msg("failed to decode loginRequest")
 
 		api.Response(http.StatusBadRequest).
 			WithError(err).
@@ -46,7 +46,7 @@ func (app *userApp) login(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	if err := app.validator.Struct(req); err != nil {
-		log.Warn().Msgf("failed to validate loginRequest: %+v", err)
+		log.Warn().Err(err).Msg("failed to validate loginRequest")
 
 		api.Response(http.StatusBadRequest).
 			WithError(err).
@@ -71,7 +71,7 @@ func (app *userApp) login(writer http.ResponseWriter, request *http.Request) {
 
 func (app *userApp) logout(writer http.ResponseWriter, request *http.Request) {
 	if err := app.srv.Logout(request.Context()); err != nil {
-		log.Warn().Msgf("failed to logout: %+v", err)
+		log.Warn().Err(err).Msg("failed to logout")
 
 		api.Response(http.StatusInternalServerError).
 			WithError(err).
@@ -85,7 +85,7 @@ func (app *userApp) logout(writer http.ResponseWriter, request *http.Request) {
 func (app *userApp) createUser(writer http.ResponseWriter, request *http.Request) {
 	req := &createUserRequest{}
 	if err := json.NewDecoder(request.Body).Decode(req); err != nil {
-		log.Warn().Msgf("failed to decode createUserRequest: %+v", err)
+		log.Warn().Err(err).Msg("failed to decode createUserRequest")
 
 		api.Response(http.StatusBadRequest).
 			WithError(err).
@@ -94,7 +94,7 @@ func (app *userApp) createUser(writer http.ResponseWriter, request *http.Request
 	}
 
 	if err := app.validator.Struct(req); err != nil {
-		log.Warn().Msgf("failed to validate createUserRequest: %+v", err)
+		log.Warn().Err(err).Msg("failed to validate createUserRequest")
 
 		api.Response(http.StatusBadRequest).
 			WithError(err).
@@ -109,7 +109,7 @@ func (app *userApp) createUser(writer http.ResponseWriter, request *http.Request
 
 	id, err := app.srv.Create(request.Context(), u)
 	if err != nil {
-		log.Error().Err(err).Msgf("failed to create user %s", req.Email)
+		log.Err(err).Msgf("failed to create user %s", req.Email)
 
 		api.Response(http.StatusInternalServerError).
 			WithError(errors.ErrGeneric).
