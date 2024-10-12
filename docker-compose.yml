@@ -12,7 +12,8 @@ services:
     environment:
       REDIS_URI: redis://redis:6379
       MONGO_URI: mongodb://mongo:27017
-  
+      KAFKA_ADDRESS: kafka:9092
+      
   mongo:
     image: mongo:latest
     ports:

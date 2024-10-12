@@ -14,6 +14,8 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/pascaldekloe/name v1.0.0 // indirect
+	github.com/pierrec/lz4/v4 v4.1.15 // indirect
+	github.com/segmentio/kafka-go v0.4.47 // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
@@ -32,7 +34,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/klauspost/compress v1.13.6 // indirect
+	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect

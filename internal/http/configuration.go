@@ -2,6 +2,7 @@ package http
 
 import (
 	users "github.com/erotokritosVall/xmapp/internal/users/application"
+	"github.com/erotokritosVall/xmapp/pkg/kafka"
 	"github.com/erotokritosVall/xmapp/pkg/mongo"
 	"github.com/erotokritosVall/xmapp/pkg/redis"
 	"github.com/kelseyhightower/envconfig"
@@ -16,6 +17,7 @@ type configuration struct {
 	RedisConfig    *redis.Configuration
 	MongoConfig    *mongo.Configuration
 	JwtConfig      *users.JwtConfig
+	KafkaConfig    *kafka.KafkaConfig
 }
 
 func (s *server) readConfiguration() {

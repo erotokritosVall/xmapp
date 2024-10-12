@@ -8,6 +8,7 @@ import (
 
 	companiesApp "github.com/erotokritosVall/xmapp/internal/companies/application"
 	companiesInfra "github.com/erotokritosVall/xmapp/internal/companies/infrastructure"
+	pubsub "github.com/erotokritosVall/xmapp/internal/companies/pub_sub"
 	usersApp "github.com/erotokritosVall/xmapp/internal/users/application"
 	usersInfra "github.com/erotokritosVall/xmapp/internal/users/infrastructure"
 	"github.com/erotokritosVall/xmapp/pkg/api"
@@ -20,12 +21,14 @@ import (
 )
 
 type server struct {
-	apps      []api.App
-	redis     redis.Redis
-	db        *mongo.Database
-	router    chi.Router
-	config    *configuration
-	validator *validator.Validate
+	apps             []api.App
+	redis            redis.Redis
+	db               *mongo.Database
+	router           chi.Router
+	config           *configuration
+	validator        *validator.Validate
+	publisherManager *pubsub.PublisherManager
+	consumerManager  *pubsub.ConsumerManager
 }
 
 func New() *server {
@@ -37,6 +40,7 @@ func New() *server {
 	s.enableRouting()
 	s.enableMiddleware()
 	s.initializeValidator()
+	s.initializePubSub()
 	s.initializeApps()
 	s.registerEndpoints()
 
@@ -53,9 +57,13 @@ func (s *server) Start(exitChannel chan os.Signal) {
 		}
 	}()
 
+	s.startConsuming()
+
 	log.Debug().Msg("server started")
 
-	<-exitChannel
+	signal := <-exitChannel
+
+	s.consumerManager.Stop(signal)
 
 	log.Debug().Msg("server stopping")
 }
@@ -86,6 +94,11 @@ func (s *server) initializeValidator() {
 	s.validator = validator.New()
 }
 
+func (s *server) initializePubSub() {
+	s.publisherManager = pubsub.NewPublisher(s.config.KafkaConfig)
+	s.consumerManager = pubsub.NewConsumerManager(s.config.KafkaConfig)
+}
+
 func (s *server) initializeApps() {
 	s.apps = []api.App{}
 
@@ -94,7 +107,7 @@ func (s *server) initializeApps() {
 	s.apps = append(s.apps, usersApp.NewApp(userSrv, s.validator))
 
 	companiesRepo := companiesInfra.New(s.db)
-	companiesSrv := companiesApp.NewService(companiesRepo)
+	companiesSrv := companiesApp.NewService(companiesRepo, s.publisherManager)
 	s.apps = append(s.apps, companiesApp.NewApp(companiesSrv, s.validator))
 }
 
@@ -110,4 +123,8 @@ func (s *server) registerEndpoints() {
 			app.RegisterProtectedEndpoints(r)
 		}
 	})
+}
+
+func (s *server) startConsuming() {
+	s.consumerManager.Start()
 }

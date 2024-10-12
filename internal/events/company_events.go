@@ -16,7 +16,7 @@ func NewCompanyCreated(companyId string) DomainEvent {
 }
 
 func (e *CompanyCreated) Type() DomainEventType {
-	return CompanyCreatedEventType
+	return EventTypeCompanyCreated
 }
 func (e *CompanyCreated) UniqueId() string {
 	return fmt.Sprintf("%s:%s", e.Type().String(), e.CompanyId)
@@ -35,7 +35,7 @@ func NewCompanyUpdated(companyId string) DomainEvent {
 }
 
 func (e *CompanyUpdated) Type() DomainEventType {
-	return CompanyUpdatedEventType
+	return EventTypeCompanyUpdated
 }
 func (e *CompanyUpdated) UniqueId() string {
 	return fmt.Sprintf("%s:%s:%d", e.Type().String(), e.CompanyId, e.Timestamp)
@@ -52,7 +52,7 @@ func NewCompanyDeleted(companyId string) DomainEvent {
 }
 
 func (e *CompanyDeleted) Type() DomainEventType {
-	return CompanyDeletedEventType
+	return EventTypeCompanyDeleted
 }
 
 func (e *CompanyDeleted) UniqueId() string {
