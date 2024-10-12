@@ -17,6 +17,9 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
+    volumes:
+     - ./scripts/mongo/mongorestore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+     - ./scripts/mongo/xmdb:/xmdb
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
