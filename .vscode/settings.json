@@ -2,5 +2,7 @@
     "go.lintTool": "golangci-lint",
     "go.lintFlags": [
         "-exclude=vendor/..."
-    ]
+    ],
+    "go.testFlags": ["-v"],
+    "go.testEnvFile": "${workspaceFolder}/cmd/api/.env"
 }
