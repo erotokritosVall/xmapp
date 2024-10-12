@@ -7,6 +7,7 @@ import (
 	domain "github.com/erotokritosVall/xmapp/internal/users/domain"
 	"github.com/erotokritosVall/xmapp/pkg/errors"
 	"github.com/erotokritosVall/xmapp/pkg/redis"
+	"github.com/erotokritosVall/xmapp/pkg/util"
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -67,7 +68,7 @@ func (srv *userService) Login(ctx context.Context, email, password string) (*str
 }
 
 func (srv *userService) Logout(ctx context.Context) error {
-	token := ctx.Value("auth_token").(string)
+	token := util.GetAuthToken(ctx).(string)
 
 	return srv.redis.SetString(ctx, token, "1", tokenTtl)
 }

@@ -1,7 +1,6 @@
 package http
 
 import (
-	"context"
 	"net/http"
 	"strings"
 	"time"
@@ -95,7 +94,7 @@ func (server *server) authMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "auth_token", token)
+		ctx := util.SetAuthToken(r.Context(), token)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
