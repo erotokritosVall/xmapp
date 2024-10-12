@@ -57,13 +57,17 @@ func (c *companyRepository) Read(ctx context.Context, id string) (*domain.Compan
 }
 
 func (c *companyRepository) Update(ctx context.Context, id string, opts *domain.CompanyUpdateOptions) error {
-	update := parseUpdateOpts(opts)
-	if len(update) == 0 {
+	fields := parseUpdateOpts(opts)
+	if len(fields) == 0 {
 		return nil
 	}
 
 	where := bson.M{
 		"id": id,
+	}
+
+	update := bson.M{
+		"$set": fields,
 	}
 
 	_, err := c.db.Collection(collectionName).UpdateOne(ctx, where, update)
