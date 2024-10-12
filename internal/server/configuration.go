@@ -1,4 +1,4 @@
-package http
+package server
 
 import (
 	users "github.com/erotokritosVall/xmapp/internal/users/application"

@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/erotokritosVall/xmapp/internal/http"
+	"github.com/erotokritosVall/xmapp/internal/server"
 	"github.com/joho/godotenv"
 )
 
@@ -18,7 +18,7 @@ func main() {
 		log.Fatalf("failed to load env: %+v", err)
 	}
 
-	server := http.New()
+	server := server.New()
 
 	server.Start(exitChannel)
 }
