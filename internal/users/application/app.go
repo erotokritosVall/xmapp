@@ -26,12 +26,12 @@ func NewApp(srv domain.UserService, validator *validator.Validate) api.App {
 
 func (app *userApp) RegisterProtectedEndpoints(router chi.Router) {
 	router.Post("/v1/logout", app.logout)
+	router.Post("/v1/users", app.createUser)
 
 }
 
 func (app *userApp) RegisterPublicEndpoints(router chi.Router) {
 	router.Post("/v1/login", app.login)
-	router.Post("/v1/users", app.createUser)
 }
 
 func (app *userApp) login(writer http.ResponseWriter, request *http.Request) {
