@@ -52,7 +52,7 @@ func (s *server) Start(exitChannel chan os.Signal) {
 		addr := fmt.Sprintf(":%s", s.config.AppPort)
 		if err := http.ListenAndServe(addr, s.router); err != nil {
 			if err != http.ErrServerClosed {
-				panic(err)
+				log.Fatal().Err(err).Msg("http server failed to start")
 			}
 		}
 	}()
