@@ -8,7 +8,7 @@ import (
 
 	companiesApp "github.com/erotokritosVall/xmapp/internal/companies/application"
 	companiesInfra "github.com/erotokritosVall/xmapp/internal/companies/infrastructure"
-	pubsub "github.com/erotokritosVall/xmapp/internal/companies/pub_sub"
+	pubsub "github.com/erotokritosVall/xmapp/internal/pub_sub"
 	usersApp "github.com/erotokritosVall/xmapp/internal/users/application"
 	usersInfra "github.com/erotokritosVall/xmapp/internal/users/infrastructure"
 	"github.com/erotokritosVall/xmapp/pkg/api"

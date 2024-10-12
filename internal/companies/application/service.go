@@ -4,8 +4,8 @@ import (
 	"context"
 
 	domain "github.com/erotokritosVall/xmapp/internal/companies/domain"
-	pubsub "github.com/erotokritosVall/xmapp/internal/companies/pub_sub"
 	"github.com/erotokritosVall/xmapp/internal/events"
+	pubsub "github.com/erotokritosVall/xmapp/internal/pub_sub"
 	"github.com/rs/zerolog/log"
 )
 
