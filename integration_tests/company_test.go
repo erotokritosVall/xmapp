@@ -77,7 +77,7 @@ func (suite *CompanyTestSuit) TearDownTest() {
 
 func (suite *CompanyTestSuit) TestInsertCompany() {
 	req := companiesApp.InsertCompanyRequest{
-		Name:           "testCompany",
+		Name:           util.RandString(10),
 		Description:    "testDescription",
 		EmployeeAmount: 20,
 		Registered:     true,
