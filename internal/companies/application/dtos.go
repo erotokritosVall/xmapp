@@ -6,7 +6,7 @@ import (
 	domain "github.com/erotokritosVall/xmapp/internal/companies/domain"
 )
 
-type insertCompanyRequest struct {
+type InsertCompanyRequest struct {
 	Name           string `json:"name" validate:"required,max=15"`
 	Description    string `json:"description" validate:"omitempty,max=3000"`
 	EmployeeAmount int    `json:"employeeAmount" validate:"gt=0"`
@@ -14,7 +14,7 @@ type insertCompanyRequest struct {
 	Type           int    `json:"type" validate:"oneof=0 1 2 3"`
 }
 
-type updateCompanyRequest struct {
+type UpdateCompanyRequest struct {
 	Name           *string `json:"name"`
 	Description    *string `json:"description"`
 	EmployeeAmount *int    `json:"employeeAmount"`
@@ -22,7 +22,7 @@ type updateCompanyRequest struct {
 	Type           *int    `json:"type"`
 }
 
-type readCompanyDto struct {
+type ReadCompanyDto struct {
 	Id             string     `json:"id"`
 	Name           string     `json:"name"`
 	Description    string     `json:"description"`
@@ -33,11 +33,11 @@ type readCompanyDto struct {
 	UpdatedAt      *time.Time `json:"updatedAt"`
 }
 
-func (r *insertCompanyRequest) toDomain() (*domain.Company, error) {
+func (r *InsertCompanyRequest) toDomain() (*domain.Company, error) {
 	return domain.New(r.Name, r.Description, r.EmployeeAmount, r.Registered, domain.CompanyType(r.Type))
 }
 
-func (r *updateCompanyRequest) toDomain() *domain.CompanyUpdateOptions {
+func (r *UpdateCompanyRequest) toDomain() *domain.CompanyUpdateOptions {
 	return &domain.CompanyUpdateOptions{
 		Name:           r.Name,
 		Description:    r.Description,
@@ -47,8 +47,8 @@ func (r *updateCompanyRequest) toDomain() *domain.CompanyUpdateOptions {
 	}
 }
 
-func companyToReadDto(c *domain.Company) *readCompanyDto {
-	return &readCompanyDto{
+func companyToReadDto(c *domain.Company) *ReadCompanyDto {
+	return &ReadCompanyDto{
 		Id:             c.Id,
 		Name:           c.Name,
 		Description:    c.Description,

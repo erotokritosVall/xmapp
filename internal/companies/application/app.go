@@ -60,7 +60,7 @@ func (app *companiesApp) read(writer http.ResponseWriter, request *http.Request)
 }
 
 func (app *companiesApp) insert(writer http.ResponseWriter, request *http.Request) {
-	req := &insertCompanyRequest{}
+	req := &InsertCompanyRequest{}
 	if err := json.NewDecoder(request.Body).Decode(req); err != nil {
 		log.Warn().Err(err).Msg("failed to decode insertCompanyRequest")
 		api.Response(http.StatusBadRequest).Send(writer, request)
@@ -104,7 +104,7 @@ func (app *companiesApp) insert(writer http.ResponseWriter, request *http.Reques
 func (app *companiesApp) update(writer http.ResponseWriter, request *http.Request) {
 	id := chi.URLParam(request, "id")
 
-	req := &updateCompanyRequest{}
+	req := &UpdateCompanyRequest{}
 	if err := json.NewDecoder(request.Body).Decode(req); err != nil {
 		log.Warn().Err(err).Msg("failed to decode updateCompanyRequest")
 		api.Response(http.StatusBadRequest).Send(writer, request)

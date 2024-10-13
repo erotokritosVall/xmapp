@@ -35,7 +35,7 @@ func (app *userApp) RegisterPublicEndpoints(router chi.Router) {
 }
 
 func (app *userApp) login(writer http.ResponseWriter, request *http.Request) {
-	req := &loginRequest{}
+	req := &LoginRequest{}
 	if err := json.NewDecoder(request.Body).Decode(req); err != nil {
 		log.Warn().Err(err).Msg("failed to decode loginRequest")
 
@@ -83,7 +83,7 @@ func (app *userApp) logout(writer http.ResponseWriter, request *http.Request) {
 }
 
 func (app *userApp) createUser(writer http.ResponseWriter, request *http.Request) {
-	req := &createUserRequest{}
+	req := &CreateUserRequest{}
 	if err := json.NewDecoder(request.Body).Decode(req); err != nil {
 		log.Warn().Err(err).Msg("failed to decode createUserRequest")
 
