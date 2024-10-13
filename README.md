@@ -1,33 +1,55 @@
+# XMapp
+
+## Overview
+
+This project is a Golang-based API application that leverages Docker to manage dependencies, including MongoDB, Redis, and Kafka. The project also supports integration with Postman for testing and debugging, and includes a linter configuration with Golangci-lint.
+
+## Prerequisites
+To run the application, ensure the following tools are installed on your machine:
+
+- [Docker](https://www.docker.com/) (required for containerized execution)
+- [Make](https://www.gnu.org/software/make/) (optional for local builds)
+- [VS Code](https://code.visualstudio.com/) (optional for running integration tests)
+- [Postman](https://www.postman.com/) (optional for testing API endpoints)
+
 ## Installation
 
-In order to run the application, [Docker](https://www.docker.com/) is required.
+1. Run with Docker: To start the application along with its dependencies, navigate to the project directory and run the following command:
 
-Navigate to the project's directory and run the command `docker-compose up -d`.
-This will spin up every dependency (MongoDB, Redis, Kafka) along with the api project.
+`docker-compose up -d`
 
-If you want to run the project in your machine, you can use [Make](https://www.gnu.org/software/make/).
+This will automatically spin up all required services (MongoDB, Redis, Kafka) along with the API itself.
 
-The command `make api` will build the project and produce an executable found at **cmd/api**.
+2. Run locally: If you prefer to run the project on your local machine, you can build the application using `make`:
 
-Before running the executable, make sure that the Docker api is stoped and all of the dependencies are still running.
+`make api`
 
-## Using the api
+This will generate the API executable, which can be found under `cmd/api/`.
 
-You can call the api endpoints using [Postman](https://www.postman.com/).
+**Note**: Before running the executable, ensure that Docker's API is stopped, but that the required dependencies (MongoDB, Redis, Kafka) are still running.
 
-In the folder **scripts/postman** you will find ready to import collections and environment.
+## API Usage
+You can interact with the API using [Postman](https://www.postman.com/). Ready-to-import collections and environment configurations are available in the `scripts/postman` folder.
 
-In order to login, you can use the `TEST_EMAIL` and `TEST_PASS` credentials found in **cmd/api/.env**.
+### Authentication
+To authenticate with the API, use the following credentials from the `.env` file located in `cmd/api/.env`:
 
-Each request will produce logs which you can view in the programs output and each mutating operation will publish and consume a message from Kafka along with a debug log of the consumed message.
+Email: `TEST_EMAIL`
+Password: `TEST_PASS`
 
-## Integration tests
+Each API call produces detailed logs visible in the application output. Mutating operations also trigger messages to be published and consumed from Kafka, along with corresponding debug logs.
 
-Currently there is a single integration test implemented under the **integration_tests** folder, which needs refactoring.
+## Integration Tests
 
-Because the test uses the .env file in order to run, you can use the 'Run test' functionality of [VS Code](https://code.visualstudio.com/).
+There is currently one integration test available in the `integration_tests` directory. However, this test requires refactoring.
 
-## Linter
+### Running Tests:
 
-The program uses [Golangci-lint](https://github.com/golangci/golangci-lint) for linting.
-The command `make lint` will run the linter using the **golangci.yml** configuration file.
+The integration tests rely on the `.env` configuration. You can easily run them using the "Run Test" functionality in [VS Code](https://code.visualstudio.com/).
+
+## Code Linting
+This project uses [Golangci-lint](https://github.com/golangci/golangci-lint) for static code analysis and linting. You can run the linter with:
+
+`make lint`
+
+This will apply the rules specified in the `golangci.yml` configuration file.
