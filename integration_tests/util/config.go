@@ -9,7 +9,7 @@ type TestsConfig struct {
 	AppPort     string `envconfig:"APP_PORT"`
 	MongoConfig *mongo.Configuration
 
-	// Should be added in secrets
+	// Should be added in secrets.
 	TestEmail string `envconfig:"TEST_EMAIL"`
 	TestPass  string `envconfig:"TEST_PASS"`
 }

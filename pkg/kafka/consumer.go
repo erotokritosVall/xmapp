@@ -39,6 +39,8 @@ func (c *Consumer) Start(receiver chan<- *Message) {
 					break
 				}
 
+				// Fetch message returns with incomplete message reads (empty headers or empty body).
+				// Temp hack to discard these cases.
 				if len(m.Headers) == 0 || len(m.Value) == 0 {
 					break
 				}

@@ -22,7 +22,9 @@ func NewConsumerManager(cfg *kafka.KafkaConfig) *ConsumerManager {
 }
 
 func (c *ConsumerManager) Start() {
-	ch := make(chan *kafka.Message)
+	// TODO: Handle panics.
+	// Channel size would be determined by the max number of messages our application will be able to consume at a given time.
+	ch := make(chan *kafka.Message, 100)
 
 	c.consumer.Start(ch)
 
@@ -50,6 +52,7 @@ func (c *ConsumerManager) Start() {
 					c := &events.CompanyCreated{}
 					if err := json.Unmarshal(incomingMessage.Body, c); err != nil {
 						log.Err(err).Msg("failed to unmarshal CompanyCreated event")
+						break
 					}
 
 					e = c
@@ -58,6 +61,7 @@ func (c *ConsumerManager) Start() {
 					c := &events.CompanyUpdated{}
 					if err := json.Unmarshal(incomingMessage.Body, c); err != nil {
 						log.Err(err).Msg("failed to unmarshal CompanyUpdated event")
+						break
 					}
 
 					e = c
@@ -66,6 +70,7 @@ func (c *ConsumerManager) Start() {
 					c := &events.CompanyDeleted{}
 					if err := json.Unmarshal(incomingMessage.Body, c); err != nil {
 						log.Err(err).Msg("failed to unmarshal CompanyDeleted event")
+						break
 					}
 
 					e = c
