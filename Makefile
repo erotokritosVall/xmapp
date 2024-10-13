@@ -5,7 +5,7 @@ generate:
 	go generate ./...
 
 api: generate
-	go build -o server ./cmd/api
+	go build -o ./cmd/api/server ./cmd/api
 
 clean:
-	del server
+	del ./cmd/api/server
